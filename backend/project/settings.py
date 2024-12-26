@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'friends',
     # Third party apps
     'rest_framework',
+    'rest_framework.authtoken',####as
     'rest_framework_simplejwt',     # provide JSON Web Token
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',                  #control which domains can access your API
@@ -92,7 +93,7 @@ AUTHENTICATION_BACKENDS = (
 # JWT Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'project.cookieJwtAuthentication.CookieJWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (

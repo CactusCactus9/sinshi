@@ -50,7 +50,7 @@ const RemoteGame = () => {
         // Setup WebSocket
         //wsRef is s useRef hook that hols a reference to ws instance
         // wsRef.current = new WebSocket(`ws://localhost:8000/ws/game/${gameId}/?token=sinshi`); // Replace with server address
-        wsRef.current = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`); // Replace with server address
+        wsRef.current = new WebSocket(`ws://localhost:8000/ws/game/${gameId}/`); // Replace with server address
 
         wsRef.current.onopen = () => {
             console.log("WebSocket connected9999999999");

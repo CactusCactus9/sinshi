@@ -1,31 +1,39 @@
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 import asyncio
 import math
 from urllib.parse import parse_qs
+from django.contrib.auth import get_user_model
 
 #this is working 
 class PongConsumer(AsyncWebsocketConsumer):
     game_loop_running = False
     players = {}  # Track player roles: {channel_name: 'leftPlayer' or 'rightPlayer'}
-    room_group_name = 'game_room'
+    # room_group_name = 'game_room'
     ball = {'x': 500, 'y': 350, 'radius': 15, 'speed': 9, 'color': 'white', 'velocityX': 9, 'velocityY': 9}
     rightPlayer = {'x': 980, 'y': 0, 'w': 20, 'h': 120, 'color': '#E84172', 'score': 0}
     leftPlayer = {'x': 0, 'y': 0, 'w': 20, 'h': 120, 'color': '#D8FD62', 'score': 0}
 
 
     async def connect(self):
-
+        # self.room_name = self.scope['url_route']['kwargs']['gameId']##comes from url : 1
+        # self.room_group_name = f'game_{self.room_name}' ###game_1
         # query_string = self.scope['query_string'].decode()
         # query_params = parse_qs(query_string)
         # token = query_params.get('token', [None])[0]
         # print(f"\t->Token: {token}")
+        # print(self.scope)
 
-        self.user = self.scope['user']
+        self.user = self.scope["user"]
+        print("User in consumer:", self.user)  # This should now show your authenticated user
+        # print("User email:", self.user.email)  # You can access all user fields
 
-
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+        # print('----------------------->:',self.user)
+        # print(f"scope_user {self.user}")
+        
+        # await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        # await self.accept()
 
         # Assign roles: first client is leftPlayer, second is rightPlayer
         # if len(PongConsumer.players) == 0:
@@ -42,10 +50,11 @@ class PongConsumer(AsyncWebsocketConsumer):
         #     asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+      pass
+        # await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         # Remove the player from the players mapping
-        if self.channel_name in PongConsumer.players:
-            del PongConsumer.players[self.channel_name]
+        # if self.channel_name in PongConsumer.players:
+        #     del PongConsumer.players[self.channel_name]
 
     def check_collision(self, paddle):
         paddle_top = paddle['y']
