@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Rationale&display=swap');
+
+.game_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    font-family: "Rationale";
+    color: #3F4054;
+    margin: 0;
+    /* background-color: blue; */
+  }
+  
+  .adversaries{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    flex-direction: row;
+    width: 1000px;
+    height: 80px;
+    margin: 0;
+    /* margin-top: 80px; */
+    margin-bottom: 30px;
+  } 
+  .player1, .player2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 50%;
+    height: 100%;
+  }
+
+  .player1{
+    background-color: #D8FD62;
+  }
+
+  .player2{
+    background-color: #E84172;
+  }
+
+.p-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+    /* background-color: rgb(252, 0, 185); */
+}
+
+.p-img img{
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+}
+
+.p-name1, .p-name2{
+    display: flex;
+    align-items: center;
+    width: 70%;
+    /* background-color: blueviolet; */
+    height: 100%;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+.p-name1{
+  justify-content:baseline;
+}
+.p-name2{
+  justify-content: end;
+}
+
+.V, .S{
+    display: flex;
+    align-items: center;
+    width: 10%;
+    height: 100%;
+    /* background-color: red; */
+    padding-left: 0;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  
+  .V{
+    justify-content:end;
+    color: #E84172;
+  }
+
+  .S{
+    justify-content:baseline;
+    color: #b2ff00;
+}
+
+
+/* .adversaries h4{
+  width: 10%;
+} */
+  
+   /* .adversaries h4{
+    font-size: 50px;
+    font-weight: 100;
+  } */
+  
+  /* .adversaries img{
+    width: 60px;
+    height: 60px;
+    border-radius: 15%;
+  } */
+  
+  /*.player2{
+    padding: 10px;
+    padding-left: 0;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    background-color: rgb(232, 65, 114);
+    height: 100%;
+  }
+  
+  .player1{
+    padding: 10px;
+    padding-right: 0;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    flex:1;
+    height: 100%;
+    background-color: rgb(216, 253, 98);
+  }
+  
+  .player1-info, .player2-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .player1-info img{
+    margin-right: 15px;
+  }
+  
+  .player2-info img{
+    margin-left: 15px;
+  }
+
+  .player2 h4{
+    color: rgb(216, 253, 98);;
+  }
+  
+  .player1 h4{
+    color: rgb(232, 65, 114);
+  } */
+
+

@@ -1,0 +1,14 @@
+.app-container {
+  display: flex;
+  width: 1280px;
+  height: 1080px;
+  margin: 0 auto;
+  overflow: hidden;
+  /* border-radius: 4px; */
+}
+
+.page-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #3F4054;
+}

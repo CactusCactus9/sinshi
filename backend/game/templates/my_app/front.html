@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Hello World! </h1>
+<p id="text">Welcome to my first Django project!</p>
+
+<script> 
+    const h1 = document.getElementById("text");
+
+    {% comment %} const url = `ws://127.0.0.1:8000/ws/game/`;//websocket server url..the browser will connect to this ws endpoint
+    const GameSocket = new WebSocket(url);//create a websocket obj to establish a connection between browser and server {% endcomment %}
+
+    {% comment %} function hello () {
+        GameSocket.send(JSON.stringify({//js function that sends json message to ws via stringify
+            type: "function",
+            message: "work good"
+        }))
+    } {% endcomment %}
+{% comment %} 
+    GameSocket.onopen = function (event) {//event fires when ws connection is a success
+        console.log("WebSocket connection established.");
+        GameSocket.send(JSON.stringify(
+            {
+                type   :"welcome",
+                message:"Hello Server, I'm connected!"
+            }
+            ));
+    };
+
+    GameSocket.onmessage = function (event) {//event fires when ws sends msg
+        const data = JSON.parse(event.data); // Parse incoming data
+
+        if (data.type === "text")
+            console.log(`text:  ${data.message}`);
+
+        if (data.type == `connection_established`){
+            console.log(`yaayy u connected ______`)
+            h1.innerText = `yaayy u connected ______`
+            console.log(`${data.message}`);
+            hello();
+        }
+    
+        // Handle the incoming data (e.g., game state updates)
+    }; {% endcomment %}
+
+
+    {% comment %} GameSocket.onclose = function (event) {
+        console.log("WebSocket connection closed:", event);
+        // Optionally, attempt to reconnect or alert the user
+    }; {% endcomment %}
+</script>
+
+</body>
+</html> 
+

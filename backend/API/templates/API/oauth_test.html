@@ -1,0 +1,78 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>42 OAuth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #00babc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>42 OAuth Test Page</h1>
+    <button onclick="loginWith42()" class="button">Login with 42</button>
+    <div id="response" class="response"></div>
+
+    <script>
+        async function loginWith42() {
+            try {
+                const response = await fetch('/api/auth/42/login/');
+                const data = await response.json();
+                window.location.href = data.auth_url;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('response').innerText = 'Error: ' + error.message;
+            }
+        }
+
+        // Handle the callback
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+        
+        if (code) {
+            document.getElementById('response').innerText = 'Processing login...';
+            
+            fetch('/api/auth/42/callback/?code=' + code)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.access) {
+                        localStorage.setItem('access_token', data.access);
+                        localStorage.setItem('refresh_token', data.refresh);
+                        document.getElementById('response').innerText = 
+                            'Login successful!\n\nUser: ' + 
+                            JSON.stringify(data.user, null, 2);
+                    } else {
+                        document.getElementById('response').innerText = 
+                            'Login failed: ' + data.error;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('response').innerText = 
+                        'Error during login: ' + error.message;
+                });
+        } else if (error) {
+            document.getElementById('response').innerText = 'Error: ' + error;
+        }
+    </script>
+</body>
+</html> -->
