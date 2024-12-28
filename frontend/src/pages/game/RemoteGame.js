@@ -165,18 +165,18 @@ const RemoteGame = () => {
 
             // Send paddle movement to server
             //?. to make sure wsRef isnt null or undefined
-            // wsRef.current?.send(
-            //     JSON.stringify({
-            //         //The client sends data as a JSON string
-            //         //leftPlayer is an object and y is its property
-            //         // {
-            //         //     "leftPlayer": { "y": 50 },
-            //         //     "rightPlayer": { "y": 100 }
-            //         // }
-            //         leftPlayer: { y: playerL.y, score: playerL.score},
-            //         rightPlayer: { y: playerR.y, score: playerR.score}
-            //     })
-            // );
+            wsRef.current?.send(
+                JSON.stringify({
+                    //The client sends data as a JSON string
+                    //leftPlayer is an object and y is its property
+                    // {
+                    //     "leftPlayer": { "y": 50 },
+                    //     "rightPlayer": { "y": 100 }
+                    // }
+                    leftPlayer: { y: playerL.y, score: playerL.score},
+                    rightPlayer: { y: playerR.y, score: playerR.score}
+                })
+            );
         };
 
         const gameInterval = setInterval(renderGame, 1000 / 60);

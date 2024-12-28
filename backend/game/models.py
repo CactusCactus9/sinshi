@@ -64,8 +64,8 @@ class Game(models.Model):
 
 
     def update_score(self, player1_score: int, player2_score):
-        self.player1_score += player1_score         
-        self.player2_score += player2_score
+        self.player1_score = player1_score         
+        self.player2_score = player2_score
         self.save()
 
         #check who reached the winning score to set the winner of the game
