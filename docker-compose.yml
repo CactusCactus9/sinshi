@@ -5,7 +5,7 @@ services:
     image: postgres:13
     container_name: postgres
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
     networks:
@@ -62,3 +62,6 @@ services:
 networks:
   app_network:
     driver: bridge
+  
+volumes:
+  postgres_data
