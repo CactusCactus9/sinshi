@@ -230,6 +230,7 @@ const Tournament = () => {
         const player1PaddleMove = lPaddleMoveRef.current;
         const player2PaddleMove = rPaddleMoveRef.current;
         const handleKeyDown = (event) => {
+            event.preventDefault();
             if (event.key === 'ArrowDown')
                 player2PaddleMove.down = true;
             if (event.key === 'ArrowUp')
@@ -240,6 +241,7 @@ const Tournament = () => {
                 player1PaddleMove.up = true;
         };
         const handleKeyUp = (event) => {
+            event.preventDefault();
             if (event.key === 'ArrowDown')
                 player2PaddleMove.down = false;
             if (event.key === 'ArrowUp')
