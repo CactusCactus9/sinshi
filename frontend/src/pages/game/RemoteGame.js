@@ -171,30 +171,26 @@ import {useParams } from 'react-router-dom';
 
 const RemoteGame = () => {
     const ballRef = useRef({x: 0, y: 0, radius: 15, color: "white", speed: 9, velocityX: 9, velocityY: 9});
-    const rightPlayerRef = useRef({ x: 0, y: 0, w: 20, h: 120, color: "#E84172", score: 0 });
-    const lPaddleMoveRef = useRef({ up: false, down: false });
-    const rPaddleMoveRef = useRef({ up: false, down: false });
-    const leftPlayerRef = useRef({ x: 0, y: 0, w: 20, h: 120, color: "#D8FD62", score: 0 });
-    const canvasRef = useRef(null);
-    const {gameId} = useParams();
-    // const {user} = useAuth();
 
-    const netRef = useRef({ x: 0, y: 0, w: 6, h: 12 });
-    
-    // const isrunningGame = useRef(true);
-    const wsRef = useRef(null); // WebSocket reference
+    const rightPlayerRef = useRef({ x: 0, y: 0, w: 20, h: 120, color: "#E84172", score: 0 });
+    const rPaddleMoveRef = useRef({ up: false, down: false });
+
+    const lPaddleMoveRef = useRef({ up: false, down: false });
+    const leftPlayerRef  = useRef({ x: 0, y: 0, w: 20, h: 120, color: "#D8FD62", score: 0 });
+
+    const canvasRef      = useRef(null);
+    const {gameId}       = useParams();
+    const netRef         = useRef({ x: 0, y: 0, w: 6, h: 12 });
+    const wsRef          = useRef(null); // WebSocket reference
     // const navigate = useNavigate();
-    const playerRole = useRef(null);
-    const lastSentStateRef = useRef({ leftY: 0, rightY: 0 });
+    const playerRole     = useRef(null);
+    // const lastSentStateRef = useRef({ leftY: 0, rightY: 0 });
     
     useEffect(() => {
         
         const canvas = canvasRef.current;
         canvas.width = 1000;
         canvas.height = 700;
-
-        const lPaddleMove = lPaddleMoveRef.current;
-        const rPaddleMove = rPaddleMoveRef.current;
 
         const ball = ballRef.current;
         ball.x = canvas.width/2;
@@ -204,62 +200,86 @@ const RemoteGame = () => {
         bot.x = canvas.width - bot.w;
         bot.y = canvas.height - bot.h;
 
-        // const playerL = leftPlayerRef.current;
-        // const playerR = rightPlayerRef.current;
         const net = netRef.current;
         net.x = canvas.width / 2 - net.w / 2;
 
         // Setup WebSocket
         //wsRef is s useRef hook that hols a reference to ws instance
-        // const setupWebSocket = () => {
-        //     wsRef.current = new WebSocket(`ws://localhost:8000/ws/game/${gameId}/`); // Replace with server address
+        const setupWebSocket = () => {
+            wsRef.current = new WebSocket(`ws://localhost:8000/ws/game/${gameId}/`); // Replace with server address
 
-        //     wsRef.current.onopen = () => {
-        //         console.log("WebSocket connected9999999999");
-        //     };
-        //     wsRef.current.onmessage = (message) => {
-        //         try{
-        //             // Parse the JSON string into an object
+            wsRef.current.onopen = () => {
+                console.log("WebSocket connected9999999999");
+            };
+            wsRef.current.onmessage = (message) => {
+                try{
+                    // Parse the JSON string into an object
         
-        //             // Example: data = { leftPlayer: { y: 50 }, rightPlayer: { y: 100 } }
-        
-        //             const data = JSON.parse(message.data);
-        //             console.log("data coming from BK:",data);
-        //             if (data.role){
-        //                 playerRole.current = data.role;
-        //             }
-        //             if (data.ball) {
-        //                 Object.assign(ballRef.current, data.ball);
-        //             }
-        //             if (data.leftPlayer && data.leftPlayer.y !== leftPlayerRef.current.y){
-        //                 Object.assign(leftPlayerRef.current, data.leftPlayer);
-        //             }
-        //             if (data.rightPlayer && data.rightPlayer.y !== rightPlayerRef.current.y){
-        //                 Object.assign(rightPlayerRef.current, data.rightPlayer);
-        //             }
-        //             if (data.winner){
-        //                 if (data.winner === "leftPlayer" || data.winner === "rightPlayer")
-        //                     console.log("WINNNNEEEER");
-        //             }
-        //             console.log("Updated from Backend:", data);
-        //             }
-        //             catch(error){
-        //                 console.error('PARSING ERROR:', error);
-        //             }       
-        //     };
+                    // Example: data = { leftPlayer: { y: 50 }, rightPlayer: { y: 100 } }
+                    const data = JSON.parse(message.data);
+
+                    if (data.action === "init_players"){
+                        playerRole.current      = data.role;
+                        leftPlayerRef.current.y = data.leftPlayer.y;
+                        rightPlayerRef.current.y= data.rightPlayer.y;
+                        Object.assign(ballRef.current, data.ball);
+                    }
+                    if (data.action === "update_ball"){
+                        Object.assign(ballRef.current, data.ball);
+                        leftPlayerRef.current.score = data.leftPlayer.score;
+                        rightPlayerRef.current.score= data.rightPlayer.score;
+                    }
+                    if (data.action  === "update_girl") {
+                        // console.log(`update the ${data.role}`)
+                        if (data.role === playerRole.current){
+                            console.log(`HEHEHE LEGUAAAA`);
+                            return
+                        }
+                        if (data.role === "rightPlayer") {
+                            rightPlayerRef.current.y = data.new_pos;
+                        }
+                        if (data.role === "leftPlayer") {
+                            leftPlayerRef.current.y = data.new_pos;
+                        }
+                    }
+
+                    // if (data.role){
+                    //     playerRole.current = data.role;
+                    // }
+                    // if (data.ball) {
+                    //     Object.assign(ballRef.current, data.ball);
+                    // }
+                    // if (data.leftPlayer ){
+                    //     leftPlayerRef.current.y = data.leftPlayer.y;
+                    //     leftPlayerRef.current.score = data.leftPlayer.score;
+                    // }
+                    // if (data.rightPlayer && data.rightPlayer.y !== rightPlayerRef.current.y){
+                    //     rightPlayerRef.current.y = data.rightPlayer.y;
+                    //     rightPlayerRef.current.score = data.rightPlayer.score;
+                    // }
+                    if (data.winner){
+                        if (data.winner === "leftPlayer" || data.winner === "rightPlayer")
+                            console.log("WINNNNEEEER");
+                    }
+                    // console.log("Updated from Backend:", data);
+                    }
+                    catch(error){
+                        console.error('PARSING ERROR:', error);
+                    }       
+            };
                 
-        //     wsRef.current.onerror = (error) => {
-        //         console.error('WebSocket error:', error);
-        //     };
+            wsRef.current.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
             
-        //     wsRef.current.onclose = () => {
-        //         console.log("WebSocket disconnected");
-        //     };
-        // };
+            wsRef.current.onclose = () => {
+                console.log("WebSocket disconnected");
+            };
+        };
         
     
 
-        // setupWebSocket();
+        setupWebSocket();
 
 
         const renderGame = () => {
@@ -267,8 +287,6 @@ const RemoteGame = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // const ball = ballRef.current;
-            const playerL = leftPlayerRef.current;
-            const playerR = rightPlayerRef.current;
 
             // Draw table
             ctx.fillStyle = "#636987";
@@ -281,118 +299,199 @@ const RemoteGame = () => {
             }
 
             //draw ball
-            // ctx.beginPath();
-            // ctx.fillStyle = ball.color;
-            // ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, false);
-            // ctx.fill();
-            // ctx.closePath();
+            ctx.beginPath();
+            ctx.fillStyle = ball.color;
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.closePath();
+
             // Draw paddles
             ctx.fillStyle = leftPlayerRef.current.color;
-            ctx.fillRect(playerL.x, playerL.y, playerL.w, playerL.h);
+            ctx.fillRect(leftPlayerRef.current.x, leftPlayerRef.current.y, leftPlayerRef.current.w, leftPlayerRef.current.h);
 
             ctx.fillStyle = rightPlayerRef.current.color;
-            ctx.fillRect(playerR.x, playerR.y, playerR.w, playerR.h);
+            ctx.fillRect(rightPlayerRef.current.x, rightPlayerRef.current.y, rightPlayerRef.current.w, rightPlayerRef.current.h);
+
+            // // update tha paddles
+            // movePaddle();
 
             //Draw score
             ctx.fillStyle = "white";
             ctx.font = "60px rationale";
-            ctx.fillText(playerL.score, canvas.width/4, canvas.height/5);
-            ctx.fillText(playerR.score, canvas.width/4 * 3, canvas.height/5);
+            ctx.fillText(leftPlayerRef.current.score, canvas.width/4, canvas.height/5);
+            ctx.fillText(rightPlayerRef.current.score, canvas.width/4 * 3, canvas.height/5);
 
         };
         
+
+
+/*
+        // const movePaddle = () => {
+        //     let stateChanged = false;
+
+        //     if (lPaddleMoveRef.current.up) {
+        //         Object.assign(leftPlayerRef.current, {
+        //             y: Math.max(0, leftPlayerRef.current.y - 15),
+        //         });
+        //         stateChanged = true;
+        //         console.log("left up", stateChanged);
+        //     }
+        //     if (lPaddleMoveRef.current.down) {
+        //         Object.assign(leftPlayerRef.current, {
+        //             y: Math.min(canvasRef.current.height - leftPlayerRef.current.h, leftPlayerRef.current.y + 15),
+        //         });
+        //         stateChanged = true;
+        //         console.log("left down", stateChanged);
+        //     }
+
+        //     if (rPaddleMoveRef.current.up) {
+        //         Object.assign(rightPlayerRef.current, {
+        //             y: Math.max(0, rightPlayerRef.current.y - 15),
+        //         });
+        //         stateChanged = true;
+        //         console.log("right up", stateChanged);
+        //     }
+        //     if (rPaddleMoveRef.current.down) {
+        //         Object.assign(rightPlayerRef.current, {
+        //             y: Math.min(canvasRef.current.height - rightPlayerRef.current.h, rightPlayerRef.current.y + 15),
+        //         });
+        //         stateChanged = true;
+        //         console.log("right down", stateChanged);
+        //     }
+        //     console.log("-8-8-8-8-8-8…", leftPlayerRef.current.y);
+        //     console.log("7-7-7-7-7-7-7:", rightPlayerRef.current.y)
+        //     // Send paddle movement to server
+        //     //?. to make sure wsRef isnt null or undefined
+        //     if (stateChanged && wsRef.current?.readyState ===WebSocket.OPEN){
+        //         const currentState = {
+        //             leftY: leftPlayerRef.current.y,
+        //             rightY: rightPlayerRef.current.y,
+        //         };
+        //         if (Math.abs(currentState.leftY - lastSentStateRef.current.leftY) > 1 ||
+        //             Math.abs(currentState.rightY - lastSentStateRef.current.rightY) > 1){
+        //                 wsRef.current?.send(
+        //                     JSON.stringify({
+        //                         //The client sends data as a JSON string
+        //                         //leftPlayer is an object and y is its property
+        //                         // {
+        //                         //     "leftPlayer": { "y": 50 },
+        //                         //     "rightPlayer": { "y": 100 }
+        //                        // }
+        //                         leftPlayer: { y: leftPlayerRef.current.y, score: leftPlayerRef.current.score },
+        //                         rightPlayer: { y: rightPlayerRef.current.y, score: rightPlayerRef.current.score },
+        //                     })
+        //                 );
+        //                 lastSentStateRef.current = currentState;
+        //             }
+        //     }
+        // }; 
+*/
+
+
+
+        const movePaddle = (event) => {
+            if (playerRole.current === 'rightPlayer') {
+
+                if (rPaddleMoveRef.current.up){
+                    rightPlayerRef.current.y = Math.max(0, rightPlayerRef.current.y - 10);
+                }
+                if (rPaddleMoveRef.current.down){
+                    rightPlayerRef.current.y = Math.min(canvasRef.current.height - rightPlayerRef.current.h, rightPlayerRef.current.y + 10);
+                    
+                }
+            }
+            if (playerRole.current === 'leftPlayer') {
+
+
+                if (lPaddleMoveRef.current.up){
+                    leftPlayerRef.current.y = Math.max(0, leftPlayerRef.current.y - 10);
+                    
+                }
+                if (lPaddleMoveRef.current.down){
+                    leftPlayerRef.current.y = Math.min(canvasRef.current.height - leftPlayerRef.current.h, leftPlayerRef.current.y + 10);
+                }
+            }
+        }
+
+        const sendToPlayer = () =>  {
+            let player;
+            if (playerRole.current === "rightPlayer"){
+                console.log('send right data')
+                player = rightPlayerRef.current;
+            }
+            else if (playerRole.current === "leftPlayer"){
+                console.log('send left data')
+                player = leftPlayerRef.current;
+            }
+            else{
+                console.log('HEHE GOT NOTHING')
+                return
+            }
+            wsRef.current?.send(
+                JSON.stringify({
+                    type     : 'update_girl',
+                    role     : playerRole.current,
+                    player_y : player.y
+                })
+            );
+        }
+        let lastTime = 0;
+        function gameLoop(currentTime) {
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+            sendToPlayer();
+            movePaddle(deltaTime); // Update paddle positions
+            renderGame(deltaTime); // Render the game
+        
+            requestAnimationFrame(gameLoop); // Schedule the next frame
+        }
+
+
+        requestAnimationFrame(gameLoop);
+        console.log(`GAMEID= ${gameId}   =====`)
+        // const keyPressInterval = setInterval(movePaddle, 1000 / 60);
+
         const handleKeyDown = (event) => {
-            event.preventDefault();
-            if (event.key === 'ArrowDown')
-                rPaddleMove.down = true;
-                lPaddleMove.down = true;
-            if (event.key === 'ArrowUp')
-                rPaddleMove.up = true;
-                lPaddleMove.up = true;
-            // if (event.key === 's' || event.key === 'S')
-            // if (event.key === 'w' || event.key === 'W')
+            event.preventDefault()
+            if (playerRole.current === 'rightPlayer'){
+                if (event.key === 'ArrowDown')
+                    rPaddleMoveRef.current.down = true;
+                if (event.key === 'ArrowUp')
+                    rPaddleMoveRef.current.up = true;
+            }
+            if (playerRole.current === 'leftPlayer'){
+                if (event.key === 'ArrowDown')
+                    lPaddleMoveRef.current.down = true;
+                if (event.key === 'ArrowUp')
+                    lPaddleMoveRef.current.up = true;
+            }
 
         };
         const handleKeyUp = (event) => {
-            event.preventDefault();
-            if (event.key === 'ArrowDown')
-                rPaddleMove.down = false;
-                lPaddleMove.down = false;
-            if (event.key === 'ArrowUp')
-                rPaddleMove.up = false;
-            if (event.key === 's' || event.key === 'S')
-            if (event.key === 'w' || event.key === 'W')
-                lPaddleMove.up = false;
+            event.preventDefault()
+            if (playerRole.current === 'rightPlayer'){
+                if (event.key === 'ArrowDown')
+                    rPaddleMoveRef.current.down = false;
+                if (event.key === 'ArrowUp')
+                    rPaddleMoveRef.current.up = false;
+            }
+            if (playerRole.current === 'leftPlayer'){
+                if (event.key === 'ArrowDown'){
+                    lPaddleMoveRef.current.down = false;
+                }
+                if (event.key === 'ArrowUp')
+                    lPaddleMoveRef.current.up = false;
+            }
         };
+
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
-        const movePaddle = () => {
-            let stateChanged = false;
-            if (lPaddleMoveRef.current.up) {
-                Object.assign(leftPlayerRef.current, {
-                    y: Math.max(0, leftPlayerRef.current.y - 15),
-                });
-                stateChanged = true;
-                console.log("left up", stateChanged);
-            }
-            if (lPaddleMoveRef.current.down) {
-                Object.assign(leftPlayerRef.current, {
-                    y: Math.min(canvasRef.current.height - leftPlayerRef.current.h, leftPlayerRef.current.y + 15),
-                });
-                stateChanged = true;
-                console.log("left down", stateChanged);
-            }
-
-            if (rPaddleMoveRef.current.up) {
-                Object.assign(rightPlayerRef.current, {
-                    y: Math.max(0, rightPlayerRef.current.y - 15),
-                });
-                stateChanged = true;
-                console.log("right up", stateChanged);
-            }
-            if (rPaddleMoveRef.current.down) {
-                Object.assign(rightPlayerRef.current, {
-                    y: Math.min(canvasRef.current.height - rightPlayerRef.current.h, rightPlayerRef.current.y + 15),
-                });
-                stateChanged = true;
-                console.log("right down", stateChanged);
-            }
-            console.log("-8-8-8-8-8-8…", leftPlayerRef.current.y);
-            console.log("7-7-7-7-7-7-7:", rightPlayerRef.current.y)
-            // Send paddle movement to server
-            //?. to make sure wsRef isnt null or undefined
-            if (stateChanged && wsRef.current?.readyState ===WebSocket.OPEN){
-                const currentState = {
-                    leftY: leftPlayerRef.current.y,
-                    rightY: rightPlayerRef.current.y,
-                };
-                if (Math.abs(currentState.leftY - lastSentStateRef.current.leftY) > 1 ||
-                    Math.abs(currentState.rightY - lastSentStateRef.current.rightY) > 1){
-                        wsRef.current?.send(
-                            JSON.stringify({
-                                //The client sends data as a JSON string
-                                //leftPlayer is an object and y is its property
-                                // {
-                                //     "leftPlayer": { "y": 50 },
-                                //     "rightPlayer": { "y": 100 }
-                                // }
-                                leftPlayer: { y: leftPlayerRef.current.y, score: leftPlayerRef.current.score },
-                                rightPlayer: { y: rightPlayerRef.current.y, score: rightPlayerRef.current.score },
-                            })
-                        );
-                        lastSentStateRef.current = currentState;
-                    }
-            }
-        };
-
-        const gameInterval = setInterval(renderGame, 1000 / 60);
-        const keyPressInterval = setInterval(movePaddle, 1000 / 30);
         return () => {
             if (wsRef.current)
                     wsRef.current.close();
-            clearInterval(gameInterval);
-            clearInterval(keyPressInterval);
+            // clearInterval(gameInterval);
+            // clearInterval(keyPressInterval);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
             
@@ -401,7 +500,9 @@ const RemoteGame = () => {
 
     return (
         <div className='game_container'>
+            <p>You are playing as: {playerRole.current}</p>
             <canvas ref={canvasRef}></canvas>
+            <h1>{gameId}</h1>
         </div>
     );
 };
