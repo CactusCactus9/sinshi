@@ -8,6 +8,7 @@ import Chat from './pages/chat/Chat';
 import Game from './pages/game/Game';
 import Friends from './pages/friends/Friends';
 import Settings from './pages/settings/Settings';
+import Loading from './pages/game/Loading';
 import Logout from './pages/logout/Logout';
 import SignIn from './pages/signin/SignIn';
 import SignUp from './pages/signin/SignUp';
@@ -27,14 +28,11 @@ import TournamentLocal from './pages/game/TournamentLocal';
 import Tournament from './pages/game/Tournament';
 import OnePlayerGame from './pages/game/OnePlayerGame';
 import TwoPlayersGame from './pages/game/TwoPlayersGame';
-import OnePlayerScore from './pages/game/Score1player';
-import TwoPlayersScore from './pages/game/Score2players';
-import TourFinalScore from './pages/game/TourFinalScore';
 import Online from './pages/game/GameRequest';
+import Score from './pages/game/Score';
 
 const AppContent = () => {
   const { islog } = useAuth();
-
 
   const router = createBrowserRouter([
     {
@@ -67,13 +65,26 @@ const AppContent = () => {
             { path: "", element: <Home /> },
             { path: ":userId", element: <ProfileFriend /> },
             { path: "TournamentLocal", element: <TournamentLocal /> },
-            { path: "SoloPractice", element: <OnePlayerGame /> },
-            { path: "ChallengeAFriend", element: <TwoPlayersGame /> },
+            { path: "SoloPractice",
+              children:[
+                { path: "", element: <OnePlayerGame /> },
+                { path: "Score", element: <Score /> },
+              ]
+            },
+            { path: "ChallengeAFriend",
+              children:[
+                { path: "", element: <TwoPlayersGame /> },
+                { path: "Score", element: <Score /> },
+              ]
+            },
             {
               path: "Online/*",
               children: [
                 { path: "", element: <Online /> },
                 { path: ":userId", element: <ProfileFriend /> },
+                { path: "Loading/:userId", element: <Loading /> },
+                { path: "play/:gameId", element: <RemoteGame /> },
+                { path: "Score", element: <Score /> },
               ]
             },
           ]
@@ -92,7 +103,7 @@ const AppContent = () => {
             { path: ":userId", element: <ProfileFriend /> },
           ]
         },
-        { path: "chat", element: <Chat /> },
+        { path: "chat/", element: <Chat /> },
         {
           path: "game/*",
           children: [
@@ -109,14 +120,14 @@ const AppContent = () => {
                       path: "SoloPractice/*",
                       children: [
                         { path: "", element: <OnePlayerGame /> },
-                        { path: "Score", element: <OnePlayerScore /> },
+                        { path: "Score", element: <Score /> },
                       ]
                     },
                     {
                       path: "ChallengeAFriend/*",
                       children: [
                         { path: "", element: <TwoPlayersGame /> },
-                        { path: "Score", element: <TwoPlayersScore /> },
+                        { path: "Score", element: <Score /> },
                       ]
                     },
                   ]
@@ -125,13 +136,7 @@ const AppContent = () => {
                   path: "TournamentLocal/*",
                   children: [
                     { path: "", element: <TournamentLocal /> },
-                    {
-                      path: "Tournament/*",
-                      children: [
-                        { path: "", element: <Tournament /> },
-                        { path: "Results", element: <TourFinalScore /> },
-                      ]
-                    },
+                    {path: "Tournament/*", element: <Tournament />},
                   ]
                 },
               ]
@@ -140,8 +145,9 @@ const AppContent = () => {
               path: "Online/*",
               children: [
                 { path: "", element: <Online /> },
+                { path: ":userId", element: <ProfileFriend /> },
+                { path: "Loading/:userId", element: <Loading /> },
                 { path: "play/:gameId", element: <RemoteGame /> },
-                // { path: ":userId", element: <ProfileFriend /> },
               ]
             },
           ]

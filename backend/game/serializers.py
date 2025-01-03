@@ -1,7 +1,7 @@
 # from rest_framework import serializers
-# from ./models import Game
+
 from rest_framework import serializers
-from .models import Requestship, User
+from .models import Game, Requestship, User
 # from friends import models
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,7 +34,7 @@ class RequestshipSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at']
 
 
-# class GameSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Game
-#         fields = "__all__"
+class GameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = "__all__"

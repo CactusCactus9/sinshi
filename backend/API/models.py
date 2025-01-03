@@ -111,7 +111,7 @@ class UserProfile(models.Model):
     level = models.FloatField(default=1.0)
     points = models.IntegerField(default=0)
     wins = models.IntegerField(default=0)
-    # losses = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
     # win_streak = models.IntegerField(default=0)
     fastVictory = models.DurationField(null=True, blank=True)
     consecutiveWins = models.IntegerField(default=0)

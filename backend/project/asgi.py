@@ -1,14 +1,4 @@
-"""
-ASGI config for project project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
-"""
-
 import os
-from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from project.routing import websocket_urlpatterns
@@ -19,12 +9,9 @@ from channels.db import database_sync_to_async
 from project.cookieJwtAuthentication import CookieJWTAuthentication  # Import your custom class
 from channels.auth import get_user
 import json
-
 class JWTAuthMiddleware(BaseMiddleware):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-
     def get_access_token_from_cookies(self, headers):
         for key, value in headers:
             if key == b'cookie':
@@ -38,7 +25,6 @@ class JWTAuthMiddleware(BaseMiddleware):
                         if name == 'access':
                             return val
         return None
-
     async def __call__(self, scope, receive, send):
         # Extract the JWT token from cookies (you can use your custom method)
         cookie_auth = CookieJWTAuthentication()
@@ -48,9 +34,6 @@ class JWTAuthMiddleware(BaseMiddleware):
         scope['user'] = user
         scope['token'] = token
         await super().__call__(scope, receive, send)
-
-
-
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),  # HTTP requests
     "websocket": JWTAuthMiddleware(  # WebSocket handling
@@ -59,16 +42,3 @@ application = ProtocolTypeRouter({
         )
     ),
 })
-
-
-
-
-# import os
-# from django.core.asgi import get_asgi_application
-# from channels.routing import ProtocolTypeRouter
-# from .routing import application
-
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yourproject.settings')
-# django_asgi_app = get_asgi_application()
-
-# application = application  # Use the routing from routing.py

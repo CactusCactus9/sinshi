@@ -9,21 +9,12 @@ from .models import Game
 # from API.models import User, UserProfile
 from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
-# from .serializers import GameSerializer
+from .serializers import GameSerializer
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import Requestship, UserRequest, User
 from rest_framework import status
 from .serializers import RequestshipSerializer, UserSerializer
-
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_game(request):
-    user = request.user
-    game = Game.objects.create(player1=user, status='waiting')
-    return Response({'game_id': game.id, 'message': 'ame created. Waiting for another player to join.'})
 
 class SendRequestView(APIView):
     permission_classes = [IsAuthenticated]
@@ -86,6 +77,7 @@ class SendRequestView(APIView):
             status=Requestship.PENDING
         )
         serializer = RequestshipSerializer(requestship)
+        print('---------Invite------------')
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
@@ -117,7 +109,7 @@ class AcceptRequestView(APIView):
         receiver_request.requestships.add(requestship.sender)
 
         serializer = RequestshipSerializer(requestship)
-
+        print('-----------Accept----------')
         return Response(
             {"message": f"You can now start game with {requestship.sender.email}",
             "friendship": serializer.data},
@@ -141,7 +133,7 @@ class DeclineRequestReceivedView(APIView):
             )
 
         requestship.delete()
-
+        print('---------remove request-------')
         success_message = f"Request from {sender_user.email} has been removed"
         return Response(
             {"message": success_message},
@@ -165,7 +157,7 @@ class DeclineRequestSendView(APIView):
             )
 
         requestship.delete()
-
+        print('-------------Cancel-----------')
         success_message = f"Request to {receiver_user.email} has been removed"
         return Response(
             {"message": success_message},
@@ -253,7 +245,8 @@ class checkGameRequestStatusView(APIView):
         
         checkstatus = Requestship.objects.filter( (Q(receiver=user) & Q(sender=request.user)) |
                                                  (Q(receiver=request.user) & Q(sender=user)), 
-                                                 Q(status=Requestship.PENDING)).exists()
+                                                 Q(status=Requestship.PENDING) | 
+                                                 Q(status=Requestship.ACCEPTED)).exists()
 
         if checkstatus:
             return Response({'status': 'ok'}, status=200)
@@ -285,29 +278,31 @@ class checkGameRequestStatusView(APIView):
 #             status=status.HTTP_200_OK
         # )
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def create_game_session(request):
-#     if request.method == 'POST':
-#         player1 = request.user
-#         player2 = request.data.get('player2')
-#         if not all([player1, player2]):
-#             return Response({'success':False, 'error':'Required fields are missing.'}, status=400)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_game_session(request, id_player2):
+    print("**************************")
+    if request.method == 'POST':
+        player1 = request.user
+        player2 = get_object_or_404(User, id=id_player2)
+        if not all([player1, player2]):
+            return Response({'success':False, 'error':'Required fields are missing.'}, status=400)
 
-#         if player1 == player2:
-#             return Response ({"self-competition is not possible."}, status=400)
-#         if Game.objects.filter(player1=player1, player2=player2, status="Active").exists():
-#             return Response({"Game already Created" : True}, status=405)
-#         try:
-#             game = Game.objects.create(player1=player1, player2=player2)
-#             serializer = GameSerializer(game)
-#             return Response({
-#                 'success': True,
-#                 'game': serializer.data,
-#             })
-#         except Exception as e:
-#             return Response({"success":False, "error":str(e)}, status=400)
-#     return Response({"success":False, "error":"Invalid request method."}, status=405)
+        if player1 == player2:
+            return Response ({"self-competition is not possible."}, status=400)
+        if Game.objects.filter(player1=player1, player2=player2, status="Active").exists():
+            return Response({"Game already Created" : True}, status=405)
+        try:
+            game = Game.objects.create(player1=player1, player2=player2)
+            serializer = GameSerializer(game)
+            print('------------game created----------------')
+            return Response({
+                'success': True,
+                'game': serializer.data,
+            })
+        except Exception as e:
+            return Response({"success":False, "error":str(e)}, status=400)
+    return Response({"success":False, "error":"Invalid request method."}, status=405)
 
 
 # @api_view(['POST'])

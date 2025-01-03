@@ -2,24 +2,30 @@ import React, { useState, useEffect } from 'react';
 import '../friends/Friends.css';
 import Banner from '../../components/Banner';
 import { IoPersonOutline } from "react-icons/io5";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import { IoEllipse } from "react-icons/io5";
 // import { IoEllipseOutline } from "react-icons/io5";
 import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 
 
 import axios from 'axios';
 
+
+
 const GameRequest = () => {
+    const { user } = useAuth();
     const [activeSection, setActiveSection] = useState('friends');
     const [allRequests, setAllRequests] = useState([]);
     const [allFriends, setAllFriends] = useState([]);
     const [invitations, setInvitations] = useState([]);
     const [pending, setPending] = useState({});
+    const [key, setKey] = useState(false);
     const [friendStatuses, setFriendStatuses] = useState({});
     axios.defaults.withCredentials = true;
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const { addNotification } = useNotification();
+    
 
     
     useEffect(() => {
@@ -54,6 +60,16 @@ const GameRequest = () => {
         axios.post(`http://localhost:8000/game/accept/${userId}/`)
             .then(() => {
                 setPending((prevState) => ({ ...prevState, [userId]: false }));
+                
+                navigate(`Loading/${user.id}`, {state: {status: "accept"}});
+                // axios.post(`http://localhost:8000/game/startgame/${userId}/`)
+                // .then(() => {
+                    
+                    // setStartGame(true);
+                // })
+                // .catch((err) => {
+                    // console.log(err);
+                // });
             })
             .catch((err) => {
                 console.log(err);
@@ -64,6 +80,7 @@ const GameRequest = () => {
         axios.post(`http://localhost:8000/game/declinereceived/${userId}/`)
             .then(() => {
                 setPending((prevState) => ({ ...prevState, [userId]: false }));
+                setKey(!key);
             })
             .catch((err) => {
                 console.log(err);
@@ -74,8 +91,12 @@ const GameRequest = () => {
         axios.post(`http://localhost:8000/game/send/${userId}/`)
             .then((response) => {
                 if(response.status === 201){
-                    console.log('***********^^^^^*******');
+                    setKey(!key);
                     setPending((prevState) => ({ ...prevState, [userId]: true }));
+                    console.log('----------@@@@@__________________________________________')
+                    console.log(user.id);
+
+                    navigate(`Loading/${userId}`, {state: {status: "send"}});
                 }
                 else{
                     addNotification(response.data.status, "warning");
@@ -236,3 +257,4 @@ const GameRequest = () => {
 };
 
 export default GameRequest;
+

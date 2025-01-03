@@ -4,9 +4,6 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    /* height: 100vh;
-    width: 95vw;
-    background-color: #2f2e47; */
 }
 
 
@@ -17,48 +14,17 @@
     flex-direction: column;
     width: 300px;
     height: 300px;
-    /* padding: 40px; */
-    /* text-align: center; */
     background-color: #636987;
     border-radius: 8px;
 }
-
-/* .logo {
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    color: white;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
-} */
-
-/* .o {
-    width: 0.8em;
-    height: 0.8em;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-}
-.g{
-    font-size: 35px;
-    color: rgb(216, 253, 98)
-} */
-
-/* .menu-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-} */
 
 .local-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* padding: 12px 24px;GOES ALONG WITH BUTTONS TO ADJUST TO TEXT */
     background-color:#3F4054;
     border:2px solid #D5CFCF;
     border-radius: 8px;
-    /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
     margin: 20px auto;
     width: 180px;
     height: 40px;
@@ -72,10 +38,6 @@
 }
 
 .local-title{
-    /* color: white;
-    text-decoration: none;
-    font-size: 16px; */
-    /* font-weight: bold; */
     width: 80%;
 }
 .local-button svg{
@@ -84,10 +46,6 @@
    width: 15%;
    font-size: 30px;
 } 
-
-/* .button:hover {
-    border-color: #b2ff00;
-} */
 
 .local-button:hover svg{
     color: #b2ff00;

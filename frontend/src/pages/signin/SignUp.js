@@ -37,8 +37,8 @@ const SignUp = () => {
       addNotification("Username must be alphanumeric.", "warning");
       return ;
     }
-    else if (password.length < 6) {
-      addNotification("Password must be at least 6 characters long", "warning");
+    else if (password.length < 8) {
+      addNotification("Password must be at least 8 characters long", "warning");
       return;
     }
   

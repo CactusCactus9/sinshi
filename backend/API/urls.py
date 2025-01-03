@@ -14,6 +14,8 @@ urlpatterns = [
     path('profile/password/', views.UpdatePasswordView.as_view(), name='update_password'),
     path('infoUser/', views.infoUser.as_view(), name='info_user'),
     path('checkloginmethod/', views.check_login_method, name='check_login_method'),
+    path('infoUserProfile/', views.infoUserProfile.as_view(), name='info_user_profile'),
+
     
     # OAuth paths
     path('auth/42/login/', views.oauth_login, name='42_login'),

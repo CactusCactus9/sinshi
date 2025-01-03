@@ -1,5 +1,4 @@
 import './Online.css'
-// import Banner from '../../components/Banner';
 import { IoAddOutline } from "react-icons/io5";
 
 

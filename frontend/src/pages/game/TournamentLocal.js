@@ -1,9 +1,5 @@
-// TournamentLocal.jsx
 import React, { useState } from "react";
 import "./TournamentLocal.css";
-// import { BiEditAlt } from "react-icons/bi";
-// import { GiPingPongBat } from "react-icons/gi";
-// import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
 function TournamentLocal() {
@@ -15,8 +11,6 @@ function TournamentLocal() {
   const [error, setError] = useState("");
 
     const navigate = useNavigate();
-
-  // const [done, setDone] = useState(false);
 
 
   const handleChange = (e) =>{
@@ -32,8 +26,13 @@ function TournamentLocal() {
 };
 
   const handleSubmite = (e) => {
+    const regularExpression = /^[a-zA-Z0-9]*$/;
     e.preventDefault();
-    if (name1 === name2 || name1 === name3 || name1=== name4 || 
+    if (name1.length > 12 || name2.length > 12 || name3.length > 12 || name4.length > 12)
+      setError("Too long input: 12 caracters in max");
+    else if(!(regularExpression.test(name1) && regularExpression.test(name2) && regularExpression.test(name3) && regularExpression.test(name4)))  ///^[a-zA-Z0-9]*$/ add * allow zero occurence ; ex if name = "" no num an no alph
+      setError("Only accept alphanumeric characters!");
+    else if (name1 === name2 || name1 === name3 || name1=== name4 || 
       name2 === name3 || name2 === name4 ||
       name3 === name4)
         setError("Duplicate names!");
@@ -46,7 +45,6 @@ function TournamentLocal() {
 
   return (
     <div className="TournamentLocal-background">
-        {/* <div > */}
           <form className="TournamentLocal-container" onSubmit={handleSubmite}>
             <input type="text" placeholder="Enter a name" required value={name1} name="n1" onChange={handleChange}/>
             <input type="text" placeholder="Enter a name" required value={name2} name="n2" onChange={handleChange}/>
@@ -55,7 +53,6 @@ function TournamentLocal() {
             { error && <p className="errorMessage">{error}</p>}
             <button type="submit" className="start-button">START</button>
         </form>
-          {/* </div> */}
     </div>
   );
 }

@@ -4,10 +4,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* align-items: center;
-    height: 100vh;
-    width: 95vw;
-    background-color: #2f2e47; */
     font-family: "Rationale";
     color: white;
     width: 100%;
@@ -15,23 +11,13 @@
 }
 
 .score-elements{
-    /* background-color: white; */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    /* box-sizing: border-box; */
     width: 540px;
     height: 540px;
 }
-/* .timer {
-    display: flex;
-    color:white;
-    font-size: 100px;
-    margin-bottom: 20px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    transform: translate(0px, -110px);
-} */
 
 .Scores {
     display: flex;
@@ -52,9 +38,8 @@
     height: 100%;
     width: 260px;
     background-image: linear-gradient(to bottom right, #D8FD62, #D8FD62, white, #636987, #636987);
-    /* border-color: palevioletred; */
-    /* border-color: linear-gradient(110deg, #2f2e47 50%, #535379 50%); */
 }
+
 .Rectangle {
     background-color: #3F4054;
     display: flex;
@@ -64,13 +49,9 @@
     height: 98%;
     width: 98%;
     box-sizing: border-box;
-    /* border-color: palevioletred; */
-    /* border-color: linear-gradient(110deg, #2f2e47 50%, #535379 50%); */
 }
 .result {
     font-size: 150px;
-    /* font-weight: bold; */
-    /* color: white; */
 }
 .bar {
     display: flex;
@@ -81,7 +62,6 @@
     width: 100%;
     height: 60px;
     border-radius: 0 0 80px 80px;
-    /* padding-top: 0; */
 }
 
 .right-text, .left-text{
@@ -92,9 +72,7 @@
     color: white;
     font-size: 25px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    /* transform: translate(-125%); */
 }
-
 
 .Restart-vs {
     width: 39px;
@@ -128,19 +106,6 @@
     margin-bottom: 10px;
 }
 
-/* .Restart-b {
-    display: flex;
-    align-items: center;
-    justify-content: center; */
-    /* transform: translate(-11px, 80px); */
-    /* border: none;
-    width: 80px;
-    height: 30px;
-    background-color: #D5CFCF;;
-    border-radius: 20px;
-    margin-top: 20px;
-} */
-
 .Restart-b svg{
     margin-top: 30px;
     color: #D5CFCF;
@@ -151,24 +116,3 @@
 .Restart-b:hover svg{
     color: #b2ff00;
 }
-
-
-
-
-/* .rivalsContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 800px;
-    height: 600px;
-    background-image: linear-gradient(135deg, #D8FD62, #D8FD62, white, #636987);
-    margin-top: 300px;
-
-}
-
-.innerBackground{
-    width: 792px;
-    height: 592px;
-    background-color: #3F4054;
-} */

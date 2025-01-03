@@ -53,7 +53,7 @@ body{
     position: absolute;
     animation: moveBall 4s infinite alternate linear;
     }
-    @keyframes moveBall {
+@keyframes moveBall {
         0% {
             top: 0px;
             left: 20px;
@@ -68,8 +68,8 @@ body{
         }
     }
 @keyframes movePaddleBot {
-from {top: 0px;}
-to {top: 240px;}
+    from {top: 0px;}
+    to {top: 240px;}
 }
 @keyframes movePaddlePlayer {
 from {top: 240px;}

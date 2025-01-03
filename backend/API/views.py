@@ -103,6 +103,21 @@ class infoUser(APIView):
                 {"error": "An error occurred while fetching user information", "details": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+class   infoUserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            serializer = UserProfileSerializer(request.user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": "An error occurred while fetching user profile informations", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -558,7 +573,8 @@ class UpdatePasswordView(APIView):
         try:
             validate_password(new_password, user)
         except ValidationError as e:
-            return Response({'error': ' '.join(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
+            print(e.messages)
+            return Response({'error': ' Password must contain at least 8 characters.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(new_password)
         user.save()
